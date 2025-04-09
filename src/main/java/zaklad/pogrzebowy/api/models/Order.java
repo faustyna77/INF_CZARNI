@@ -27,6 +27,10 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
+
     public enum Status {
         pending, completed, canceled
     }
@@ -41,22 +45,6 @@ public class Order {
 
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
-    }
-
-    public String getcadaverLastName() {
-        return cadaverLastName;
-    }
-
-    public void setcadaverLastName(String cadaverLastName) {
-        this.cadaverLastName= cadaverLastName;
-    }
-
-    public String getcadaverFirstName() {
-        return cadaverFirstName;
-    }
-
-    public void setcadaverFirstName(String cadaverFirstName) {
-        this.cadaverFirstName = cadaverFirstName;
     }
 
     public Status getStatus() {
@@ -88,6 +76,14 @@ public class Order {
 
     public void setCadaverLastName(String cadaverLastName) {
         this.cadaverLastName = cadaverLastName;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
 

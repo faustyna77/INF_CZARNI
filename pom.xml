@@ -70,6 +70,11 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>0.4</version>
+		</dependency>
 
 		<!-- MySQL Connector -->
 		<dependency>
@@ -93,6 +98,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                	<mainClass>zaklad.pogrzebowy.api.PogrzebowyApplication</mainClass>
+            	</configuration>
 			</plugin>
 		</plugins>
 	</build>
