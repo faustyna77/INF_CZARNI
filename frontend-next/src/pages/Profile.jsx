@@ -1,66 +1,86 @@
+import React, { useEffect, useState } from 'react';
+
 const Profile = () => {
-  const username = "admin"; // Możesz też pobrać z propsów lub contextu
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState('');
 
-  const styles = {
-    container: {
-      backgroundColor: "#121212",
-      color: "#ffffff",
-      minHeight: "100vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    card: {
-      backgroundColor: "#1e1e1e",
-      border: "1px solid #333",
-      borderRadius: "16px",
-      padding: "32px",
-      maxWidth: "400px",
-      width: "100%",
-      boxShadow: "0 0 20px rgba(0, 0, 0, 0.5)",
-      textAlign: "center",
-    },
-    title: {
-      fontSize: "28px",
-      marginBottom: "16px",
-    },
-    subtitle: {
-      color: "#ccc",
-      marginBottom: "24px",
-    },
-    info: {
-      borderTop: "1px solid #444",
-      paddingTop: "16px",
-      color: "#aaa",
-      fontSize: "14px",
-    },
-    highlight: {
-      color: "#fff",
-      fontWeight: "bold",
-    },
-    status: {
-      color: "#4caf50",
-      fontWeight: "bold",
-    },
-  };
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError('Brak tokenu. Użytkownik nie jest zalogowany.');
+                return;
+            }
 
-  return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>Witaj, {username}!</h1>
-        <p style={styles.subtitle}>To jest Twoja strona profilu użytkownika.</p>
+            try {
+                const response = await fetch('http://localhost:8080/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
 
-        <div style={styles.info}>
-          <p>
-            Rola: <span style={styles.highlight}>Administrator</span>
-          </p>
-          <p>
-            Status: <span style={styles.status}>Aktywny</span>
-          </p>
+                if (!response.ok) throw new Error('Nie udało się pobrać danych użytkownika');
+
+                const data = await response.json();
+                setUser(data);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    if (error) {
+        return <div style={styles.error}>{error}</div>;
+    }
+
+    if (!user) {
+        return <div style={styles.loading}>Ładowanie danych użytkownika...</div>;
+    }
+
+    return (
+        <div style={styles.container}>
+            <h1 style={styles.header}>Profil użytkownika</h1>
+            <div style={styles.profileBox}>
+                <p><strong>Imię:</strong> {user.firstName}</p>
+                <p><strong>Nazwisko:</strong> {user.lastName}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Rola:</strong> {user.role}</p>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
+};
+
+const styles = {
+    container: {
+        padding: '20px',
+        maxWidth: '600px',
+        margin: '0 auto',
+        backgroundColor: '#2a2828',
+        color: 'white',
+        borderRadius: '8px',
+    },
+    header: {
+        textAlign: 'center',
+        color: '#fff',
+    },
+    profileBox: {
+        padding: '20px',
+        backgroundColor: '#3a3a3a',
+        borderRadius: '8px',
+        lineHeight: '1.8',
+    },
+    loading: {
+        color: 'white',
+        textAlign: 'center',
+        padding: '20px'
+    },
+    error: {
+        color: 'red',
+        textAlign: 'center',
+        padding: '20px'
+    }
 };
 
 export default Profile;
