@@ -40,11 +40,11 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/api/**", "/users/**").permitAll()
-
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/users/**").permitAll() // Temporarily before token implementation
                         .requestMatchers("/clients/**").authenticated()
                         .requestMatchers("/users/me").authenticated()
-                        .requestMatchers("/tasks/**").authenticated()
+                        
                         .requestMatchers("/reports/**").authenticated() // Dodana linia dla endpointów raportu
                         .requestMatchers("/api/task-report").authenticated() // Dodana linia dla alternatywnego endpointu
                         .anyRequest().authenticated()
