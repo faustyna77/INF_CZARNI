@@ -40,8 +40,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/**").permitAll() // Temporarily before token implementation
+                        .requestMatchers("/auth/**", "/api/**", "/users/**").permitAll()
+
                         .requestMatchers("/clients/**").authenticated()
                         .requestMatchers("/users/me").authenticated()
                         .requestMatchers("/tasks/**").authenticated()
